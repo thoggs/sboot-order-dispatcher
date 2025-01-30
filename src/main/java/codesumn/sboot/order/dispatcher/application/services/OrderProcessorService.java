@@ -27,6 +27,7 @@ public class OrderProcessorService implements OrderProcessorPort {
 
         OrderRecordDto orderProcessed = new OrderRecordDto(
                 order.id(),
+                order.customerCode(),
                 order.customerName(),
                 OrderStatusEnum.PROCESSED,
                 totalPrice,
