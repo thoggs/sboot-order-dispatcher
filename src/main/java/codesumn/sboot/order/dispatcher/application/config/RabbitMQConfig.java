@@ -54,9 +54,9 @@ public class RabbitMQConfig {
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jackson2JsonMessageConverter());
 
-        factory.setConcurrentConsumers(3);
-        factory.setMaxConcurrentConsumers(5);
-        factory.setPrefetchCount(5);
+        factory.setConcurrentConsumers(1);
+        factory.setMaxConcurrentConsumers(1);
+        factory.setPrefetchCount(1);
 
         return factory;
     }
