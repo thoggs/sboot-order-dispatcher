@@ -5,7 +5,6 @@ import codesumn.sboot.order.dispatcher.application.dtos.records.order.OrderRecor
 import codesumn.sboot.order.dispatcher.domain.inbound.OrderProcessorPort;
 import codesumn.sboot.order.dispatcher.domain.outbound.OrderMessagingPort;
 import codesumn.sboot.order.dispatcher.shared.enums.OrderStatusEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,7 +15,6 @@ public class OrderProcessorService implements OrderProcessorPort {
 
     private final OrderMessagingPort orderMessagingPort;
 
-    @Autowired
     public OrderProcessorService(OrderMessagingPort messagingPort) {
         this.orderMessagingPort = messagingPort;
     }
