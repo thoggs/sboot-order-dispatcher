@@ -14,12 +14,4 @@ public enum OrderStatusEnum {
 
     private final String value;
 
-    public static OrderStatusEnum fromValue(String value) {
-        for (OrderStatusEnum role : OrderStatusEnum.values()) {
-            if (role.value.equalsIgnoreCase(value)) {
-                return role;
-            }
-        }
-        return PROCESSING;
-    }
 }
