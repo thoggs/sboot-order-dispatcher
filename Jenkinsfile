@@ -3,13 +3,12 @@ pipeline {
 
 	options {
 		disableConcurrentBuilds()
-        buildDiscarder(logRotator(numToKeepStr: '4'))
+        buildDiscarder(logRotator(numToKeepStr: '5'))
 	}
 
 	triggers {
 		githubPush()
     }
-
 
     environment {
 		DOCKER_IMAGE = 'thoggs/sboot-order-dispatcher:latest'
@@ -30,9 +29,13 @@ pipeline {
 
         stage('Login to Docker Hub') {
 			steps {
-				withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials',
-                                                 usernameVariable: 'DOCKER_USERNAME',
-                                                 passwordVariable: 'DOCKER_PASSWORD')]) {
+				withCredentials([
+					usernamePassword(
+						credentialsId: 'docker-hub-credentials',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+					)
+				]) {
 					sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
             }
