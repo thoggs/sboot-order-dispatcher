@@ -10,6 +10,7 @@ pipeline {
 		githubPush()
     }
 
+
     environment {
 		DOCKER_IMAGE = 'thoggs/sboot-order-dispatcher:latest'
     }
