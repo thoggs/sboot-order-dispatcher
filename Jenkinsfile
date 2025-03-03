@@ -9,6 +9,7 @@ pipeline {
     }
 
     environment {
+		PROJECT_KEY='sboot-order-dispatcher'
 		DOCKER_IMAGE = 'public.ecr.aws/n1a9j0r1/sboot-order-dispatcher'
         AWS_REGION = 'us-east-1'
     }
@@ -76,7 +77,7 @@ pipeline {
 						withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
 							sh '''
 								sonar-scanner \
-									-Dsonar.projectKey=sboot-order-dispatcher \
+									-Dsonar.projectKey=$PROJECT_KEY \
 									-Dsonar.sources=. \
 									-Dsonar.java.binaries=build/classes/java/main
                     		'''
