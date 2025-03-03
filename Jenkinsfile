@@ -68,14 +68,13 @@
 
 pipeline {
 	agent {
-		label 'docker-builder'
+		label 'kub-suse-rancher-agent'
     }
 
     options {
 		buildDiscarder(logRotator(numToKeepStr: '5'))
         skipDefaultCheckout(true)
         disableConcurrentBuilds()
-        abortPreviousBuilds()
     }
 
     environment {
