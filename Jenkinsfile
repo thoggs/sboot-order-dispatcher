@@ -25,23 +25,6 @@ pipeline {
             }
         }
 
-        stage('Set up QEMU') {
-			steps {
-				container('docker') {
-					sh 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes || true'
-                }
-            }
-        }
-
-        stage('Set up Docker Buildx') {
-			steps {
-				container('docker') {
-					sh 'docker buildx create --use --name mybuilder || true'
-                    sh 'docker buildx inspect --bootstrap'
-                }
-            }
-        }
-
         stage('Login to AWS ECR') {
 			steps {
 				container('aws-cli') {
@@ -60,17 +43,17 @@ pipeline {
 			}
 		}
 
-		stage('Login to Docker') {
+		stage('Login Buildah to AWS ECR') {
 			steps {
-				container('docker') {
+				container('buildah') {
 					sh '''
-						cat ecr-login.txt | docker login --username AWS --password-stdin public.ecr.aws
+						buildah login -u AWS -p $(cat ecr-login.txt) public.ecr.aws
 					'''
 				}
 			}
 		}
 
-       stage('SonarQube Analysis') {
+    	stage('SonarQube Analysis') {
 			steps {
 				container('sonar-scanner') {
 					withSonarQubeEnv('sonarqube-server') {
@@ -85,32 +68,39 @@ pipeline {
 					}
 				}
 			}
-       }
+        }
 
-       stage('Trivy Security Scan') {
+    	stage('Trivy Security Scan') {
 			steps {
 				container('trivy') {
-					dir('conecta') {
-						sh '''
-							trivy fs --skip-dirs build/static/js .
-						'''
-					}
+					sh '''
+						trivy fs --skip-dirs build/static/js .
+					'''
 				}
 			}
 		}
 
-    	stage('Build Multi-Arch') {
+		stage('Build Multi-Arch') {
 			steps {
-				container('docker') {
+				container('buildah') {
 					sh '''
-                        docker buildx build \
-                            --platform linux/amd64,linux/arm64 \
-                            --build-arg JAR_FILE=app.jar \
-                            -t $DOCKER_IMAGE:latest \
-                            --push .
-                    '''
-                }
-            }
+						buildah bud --layers --platform linux/amd64,linux/arm64 \
+							--build-arg JAR_FILE=app.jar \
+							-t $DOCKER_IMAGE:latest .
+					'''
+            	}
+        	}
     	}
+
+    	stage('Push Image') {
+			steps {
+				container('buildah') {
+					sh '''
+                		buildah push $DOCKER_IMAGE:latest docker://${DOCKER_IMAGE}:latest
+            		'''
+				}
+			}
+		}
+
 	}
 }
