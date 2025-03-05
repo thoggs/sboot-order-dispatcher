@@ -102,13 +102,5 @@ pipeline {
 			}
 		}
 
-		stage('Cleanup Cache') {
-			steps {
-				container('buildah') {
-					sh 'buildah prune -a -f'
-				}
-			}
-		}
-
 	}
 }
