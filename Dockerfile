@@ -9,8 +9,8 @@
 
 FROM oraclelinux:9 AS base
 
-RUN set -eux; \
-    dnf install -y tar git wget unzip
+#RUN set -eux; \
+#    dnf install -y tar git wget unzip
 
 ARG JAVA_VERSION=21
 ENV JAVA_HOME=/usr/java/jdk-$JAVA_VERSION
